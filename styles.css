@@ -89,7 +89,7 @@ body {
     top: 10px;
     width: 100%;
     text-align: center;
-    color: #e2e8f0;
+    color: #8f0c0c;
     font-size: 30px;
     
  }
@@ -360,17 +360,30 @@ img {
   color: #000000; /* gris oscuro */
 }
 
-.logo {
-  width: 1%;   /* se ajusta al ancho del contenedor */
+.Logo {
+  width: 105%;        /* ocupa el 20% del ancho del contenedor */
+  max-width: 1500px;  /* nunca pasa de 150px */
+  min-width: 80px;   /* nunca baja de 80px */
   height: auto;      /* mantiene proporción */
-  display: block;    /* evita espacios extra */
+  display: block;
   margin: 0 auto;    /* centra la imagen */
 }
 
-/* Opcional: limitar tamaño máximo en pantallas grandes */
-@media (min-width: 768px) {
+
+
+
+/* En pantallas medianas (tablets) */
+@media (min-width: 600px) {
   .logo {
-    max-width: 200px; /* no pasa de 200px en escritorio */
+    width: 100px;     /* un poco más grande */
   }
 }
+
+/* En pantallas grandes (escritorio) */
+@media (min-width: 1024px) {
+  .logo {
+    width: 120px;     /* tamaño máximo */
+  }
+}
+
 
