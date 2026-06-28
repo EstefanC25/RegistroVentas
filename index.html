@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Ventas</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📦</text></svg>">
+<link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+
+
+<img src="img/logo1.jpeg" alt="Logo sistema" class="Logo" />
+
+<!-- BOTÓN HAMBURGUESA -->
+<div class="menu-btn" onclick="toggleMenu()">☰</div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar" class="sidebar">
+
+  <h2>📊 Sistema</h2>
+
+  <a href="index.html">🏠 Inicio</a>
+  <a href="registroventas.html" target="_blank">➕ Nueva Venta</a>
+  <a href="tabla.html" target="_blank">📋 Registro de Ventas</a>
+</nav>
+
+<!-- OVERLAY -->
+<div class="overlay" onclick="toggleMenu()"></div>
+
+<!-- CONTENIDO -->
+<div class="content1">
+
+  <h1>Bienvenido </h1>
+  <p>Sistema de registro de ventas</p>
+
+ 
+
+</div>
+
+<script>
+function toggleMenu() {
+  document.getElementById("sidebar").classList.toggle("active");
+  document.querySelector(".overlay").classList.toggle("active");
+}
+</script>
+
+
+
+</body>
+</html>

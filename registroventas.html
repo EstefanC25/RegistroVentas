@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Registro de Ventas</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  
+
+<div class="layout">
+
+  <div class="sidebar">
+    <h2>📊 Ventas</h2>
+    <a href="registroventas.html">➕ Nueva venta</a>
+    <a href="tabla.html">📋 Ver ventas</a>
+  </div>
+
+  <div class="content2">
+
+    <h1>Registrar Venta</h1>
+
+<div class="card">
+
+  <!-- Encabezado -->
+  <div class="fila-encabezado">
+    <input type="text" id="inp-factura" placeholder="# Factura">
+    <input type="date" id="inp-fecha">
+  </div>
+
+  <!-- Cliente y producto -->
+  <div class="grid">
+    <input type="text" id="inp-cliente" placeholder="Cliente">
+
+  </div>
+
+  <!-- Tabla de productos -->
+  <table id="tabla-productos" border="1" style="width:100%; text-align:center; border-collapse:collapse;">
+    <thead>
+      <tr>
+        <th>CANT.</th>
+        <th>ARTÍCULO</th>
+        <th>VR. UNITARIO</th>
+        <th>VR. TOTAL</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <!-- Inputs para agregar producto -->
+  <div class="grid">
+    <input type="number" id="inp-cant" placeholder="Cantidad">
+    <input type="text" id="inp-articulo" placeholder="Artículo">
+    <input type="number" id="inp-unitario" placeholder="Valor Unitario">
+    <button onclick="agregarProducto()">➕ Agregar producto</button>
+  </div>
+
+  <!-- Método de pago y precio -->
+  <div class="fila-pago">
+    <select id="sel-metodoPago">
+      <option value="">Método de Pago</option>
+      <option value="Efectivo">💵 Efectivo</option>
+      <option value="Transferencia">🏦 Transferencia</option>
+      <option value="Nequi">📱 Nequi</option>
+      <option value="Daviplata">📲 Daviplata</option>
+      <option value="Tarjeta Debito">💳 Tarjeta Débito</option>
+      <option value="Tarjeta Credito">💳 Tarjeta Crédito</option>
+      <option value="Consignacion">🏧 Consignación</option>
+      <option value="Credito">📝 Crédito</option>
+      <option value="Mixto">🔄 Pago Mixto</option>
+    </select>
+    <input type="number" id="inp-precio" placeholder="Precio">
+  </div>
+
+  <!-- Abono y saldo -->
+  <div class="fila-pago">
+    <input type="number" id="inp-abono" placeholder="Abono">
+    <input type="number" id="inp-saldo" placeholder="Saldo Pendiente" readonly>
+  </div>
+
+  <!-- Botón guardar -->
+  <div>
+    <button onclick="guardar()">Guardar venta</button>
+  </div>
+
+</div>
+
+
+
+<script>
+
+let productos = [];
+
+function agregarProducto() {
+    const cant = Number(document.getElementById("inp-cant").value) || 0;
+    const articulo = document.getElementById("inp-articulo").value;
+    const unitario = Number(document.getElementById("inp-unitario").value) || 0;
+    const total = cant * unitario;
+
+    if (cant <= 0 || articulo === "" || unitario <= 0) {
+        alert("⚠️ Completa los datos del producto");
+        return;
+    }
+
+    productos.push({cant, articulo, unitario, total});
+
+    const tbody = document.querySelector("#tabla-productos tbody");
+    const fila = document.createElement("tr");
+    fila.innerHTML = `
+        <td>${cant}</td>
+        <td>${articulo}</td>
+        <td>${unitario}</td>
+        <td>${total}</td>
+        <td><button onclick="eliminarProducto(this)">❌</button></td>
+    `;
+    tbody.appendChild(fila);
+
+    document.getElementById("inp-cant").value = "";
+    document.getElementById("inp-articulo").value = "";
+    document.getElementById("inp-unitario").value = "";
+
+    calcularTotales();
+}
+
+function eliminarProducto(btn) {
+    const fila = btn.parentNode.parentNode;
+    const index = fila.rowIndex - 1;
+    productos.splice(index, 1);
+    fila.remove();
+    calcularTotales();
+}
+
+function calcularTotales() {
+    let totalFactura = productos.reduce((acc, p) => acc + p.total, 0);
+
+    let tfoot = document.querySelector("#tabla-productos tfoot");
+    if (!tfoot) {
+        tfoot = document.createElement("tfoot");
+        document.querySelector("#tabla-productos").appendChild(tfoot);
+    }
+    tfoot.innerHTML = `
+        <tr>
+            <td colspan="3"><strong>TOTAL FACTURA</strong></td>
+            <td>${totalFactura}</td>
+            <td></td>
+        </tr>
+    `;
+
+    document.getElementById("inp-precio").value = totalFactura;
+    calcularSaldo();
+}
+
+function calcularSaldo() {
+    let precio = Number(document.getElementById("inp-precio").value) || 0;
+    let abono = Number(document.getElementById("inp-abono").value) || 0;
+    document.getElementById("inp-saldo").value = precio - abono;
+}
+
+document.getElementById("inp-abono").addEventListener("input", calcularSaldo);
+
+// 👇 Reemplaza esta URL cuando tengas el Apps Script desplegado
+const URL_SCRIPT = "https://script.google.com/macros/s/AKfycbyrxV-NtkXN6kDN83MfBasx9u6bMJ4QX1S0gCBHAwN3sXNjsVBufTtqVl1-HmbA6zE6/exec";
+
+function guardar() {
+    const factura = document.getElementById("inp-factura").value;
+    const cliente  = document.getElementById("inp-cliente").value;
+    const metodo   = document.getElementById("sel-metodoPago").value;
+    const fecha    = document.getElementById("inp-fecha").value;
+    const precio   = document.getElementById("inp-precio").value;
+    const abono    = document.getElementById("inp-abono").value;
+    const saldo    = document.getElementById("inp-saldo").value;
+
+    if (!factura || !cliente || !fecha || productos.length === 0) {
+        alert("⚠️ Completa todos los campos y agrega al menos un producto");
+        return;
+    }
+
+    const venta = { factura, cliente, productos, metodo, fecha, precio, abono, saldo };
+
+    // 1️⃣ Guardar en localStorage
+    let ventas = JSON.parse(localStorage.getItem("ventas")) || [];
+    ventas.push(venta);
+    localStorage.setItem("ventas", JSON.stringify(ventas));
+
+    // 2️⃣ Enviar a Google Sheets
+    fetch(URL_SCRIPT, {
+        method: "POST",
+        body: JSON.stringify(venta)
+    })
+    .then(() => alert("✅ Venta guardada y enviada a Google Sheets"))
+    .catch(() => alert("✅ Venta guardada localmente (sin conexión a Sheets)"));
+
+    // 3️⃣ Limpiar campos
+document.getElementById("inp-factura").value = "";
+document.getElementById("inp-fecha").value = "";
+document.getElementById("inp-cliente").value = "";
+document.getElementById("sel-metodoPago").value = "";
+document.getElementById("inp-precio").value = "";
+document.getElementById("inp-abono").value = "";
+document.getElementById("inp-saldo").value = "";
+
+// Limpiar tabla de productos
+productos = [];
+document.querySelector("#tabla-productos tbody").innerHTML = "";
+const tfoot = document.querySelector("#tabla-productos tfoot");
+if (tfoot) tfoot.remove();
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ventas Registradas</title>
+  <style>
+    table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-family: Arial, sans-serif; /* Tipo de fuente */
+  font-size: 18px;               /* Tamaño de fuente */
+}
+    th, td {
+      border: 1px solid #333;
+      padding: 8px;
+      vertical-align: top;
+    }
+    th {
+      background-color: #eee;
+    }
+    .productos-cell {
+      white-space: pre-line; /* respeta saltos de línea */
+      text-align: left;
+    }
+    button {
+      margin: 15px 0;
+      padding: 8px 12px;
+      background-color: #d9534f;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #c9302c;
+    }
+  </style>
+</head>
+<body>
+  <h1>📋 Ventas Registradas</h1>
+
+  <!-- Botón para borrar historial -->
+  <button onclick="borrarVentas()">🗑️ Borrar historial de ventas</button>
+
+  <table id="tabla-ventas">
+    <thead>
+      <tr>
+        <th>Factura</th>
+        <th>Cliente</th>
+        <th>Fecha</th>
+        <th>Método de Pago</th>
+        <th>Precio</th>
+        <th>Abono</th>
+        <th>Saldo</th>
+        <th>Productos</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    function cargarVentas() {
+      let ventas = JSON.parse(localStorage.getItem("ventas")) || [];
+      const tbody = document.querySelector("#tabla-ventas tbody");
+      tbody.innerHTML = ""; // limpiar tabla
+
+      if (ventas.length === 0) {
+        const fila = document.createElement("tr");
+        fila.innerHTML = `<td colspan="8">⚠️ No hay ventas registradas</td>`;
+        tbody.appendChild(fila);
+      } else {
+        ventas.forEach(v => {
+          const fila = document.createElement("tr");
+
+          // Concatenar productos con saltos de línea
+          let productosTexto = "";
+          if (v.productos && v.productos.length > 0) {
+            productosTexto = v.productos.map(p => 
+              `${p.cant}x ${p.articulo} ($${p.unitario}) = $${p.total}`
+            ).join("\n");
+          } else {
+            productosTexto = "Sin productos";
+          }
+
+          fila.innerHTML = `
+            <td>${v.factura || ""}</td>
+            <td>${v.cliente || ""}</td>
+            <td>${v.fecha || ""}</td>
+            <td>${v.metodo || ""}</td>
+            <td>${v.precio || 0}</td>
+            <td>${v.abono || 0}</td>
+            <td>${v.saldo || 0}</td>
+            <td class="productos-cell">${productosTexto}</td>
+          `;
+
+          tbody.appendChild(fila);
+        });
+      }
+    }
+
+    function borrarVentas() {
+      localStorage.removeItem("ventas"); // elimina solo las ventas
+      alert("✅ Historial de ventas borrado");
+      cargarVentas(); // recargar tabla vacía
+    }
+
+    // Cargar ventas al abrir la página
+    cargarVentas();
+  </script>
+</body>
+</html>
