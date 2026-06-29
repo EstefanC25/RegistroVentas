@@ -1,11 +1,12 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Registro de Ventas</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Ventas</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
 
   
@@ -25,10 +26,10 @@
 <div class="card">
 
   <!-- Encabezado -->
-  <div class="fila-encabezado">
-    <input type="text" id="inp-factura" placeholder="# Factura">
-    <input type="date" id="inp-fecha">
-  </div>
+<div class="fila-encabezado">
+  <input type="text" id="inp-factura" placeholder="# Factura" aria-label="Número de Factura">
+  <input type="date" id="inp-fecha" aria-label="Fecha">
+</div>
 
   <!-- Cliente y producto -->
   <div class="grid">
@@ -37,7 +38,7 @@
   </div>
 
   <!-- Tabla de productos -->
-  <table id="tabla-productos" border="1" style="width:100%; text-align:center; border-collapse:collapse;">
+  <table id="tabla-productos">
     <thead>
       <tr>
         <th>CANT.</th>
